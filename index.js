@@ -4,17 +4,17 @@ const mongoose = require("mongoose");
 var nodemailer = require("nodemailer");
 const validatePhoneNumber = require("validate-phone-number-node-js");
 const FormModel = require("./Models/formModel");
+require('dotenv').config();
 
 const cors = require("cors");
 app.use(cors());
 
 app.use(express.json());
 
-const url =
-  "mongodb+srv://ajithaj:4I1RG80VyFORG1DL@cluster0.5xdqnq2.mongodb.net/?retryWrites=true&w=majority";
+
 let fn = async () => {
   try {
-    await mongoose.connect(url);
+    await mongoose.connect(process.env.URL);
     console.log("connected...");
   } catch (err) {
     console.error(err);
@@ -53,17 +53,19 @@ app.post("/", async (req, res) => {
       message: err,
     });
   }
+
+
   //send email to the req.body.email
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "ajithraveendranr@gmail.com",
-      pass: "cdgjuoqnblalbmuh",
+      user: process.env.EMAIl,
+      pass: process.env.PASSWORD,
     },
   });
 
   var mailOptions = {
-    from: "ajithraveendranr@gmail.com",
+    from: process.env.EMAIl,
     to: req.body.email,
     subject: "Confirmation email from nodejs App",
     text: `Hi ${req.body.name},
